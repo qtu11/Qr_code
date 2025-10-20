@@ -1,0 +1,63 @@
+{
+  "name": "QR Code Generator Pro",
+  "short_name": "QR Pro",
+  "description": "Tạo mã QR chuyên nghiệp với nhiều tính năng nâng cao",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#6366f1",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-logo-qr.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "utilities"],
+  "lang": "vi",
+  "dir": "ltr",
+  "scope": "/",
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "Tạo QR URL",
+      "short_name": "URL QR",
+      "description": "Tạo QR code cho URL",
+      "url": "/?type=url",
+      "icons": [
+        {
+          "src": "favicon-32x32.png",
+          "sizes": "32x32"
+        }
+      ]
+    },
+    {
+      "name": "Tạo QR WiFi",
+      "short_name": "WiFi QR",
+      "description": "Tạo QR code cho WiFi",
+      "url": "/?type=wifi",
+      "icons": [
+        {
+          "src": "favicon-32x32.png",
+          "sizes": "32x32"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "icon-logo-qr.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "QR Code Generator Pro Interface"
+    }
+  ]
+}

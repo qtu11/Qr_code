@@ -1,0 +1,2856 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QR Code Generator Pro - Tạo mã QR chuyên nghiệp</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="shortcut icon" href="https://files.catbox.moe/d9kcwy.png" />
+  <meta name="google" content="notranslate" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css?v=20241220">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#6366f1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="QR Pro">
+  <link rel="apple-touch-icon" href="icon-logo-qr.jpg">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+    :root {
+      --primary-color: #6366f1;
+      --primary-dark: #4f46e5;
+      --secondary-color: #10b981;
+      --accent-color: #f59e0b;
+      --danger-color: #ef4444;
+      --dark-bg: #0f172a;
+      --dark-surface: #1e293b;
+      --dark-surface-2: #334155;
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --border-color: #475569;
+      --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, var(--dark-bg) 0%, #1e293b 100%);
+      min-height: 100vh;
+      color: var(--text-primary);
+      overflow-x: hidden;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-color);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 1rem 0;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 2rem;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+    }
+
+    .nav-link:hover {
+      color: var(--primary-color);
+      background: rgba(99, 102, 241, 0.1);
+    }
+
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      color: var(--accent-color);
+      background: rgba(245, 158, 11, 0.1);
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 8rem 2rem 2rem;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .header h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+    }
+
+    .header p {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Main Content */
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    /* QR Type Selection */
+    .qr-type-selector {
+      background: var(--dark-surface);
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-color);
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: var(--text-primary);
+    }
+
+    .type-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .type-btn {
+      background: var(--dark-surface-2);
+      border: 2px solid transparent;
+      border-radius: 0.75rem;
+      padding: 1rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .type-btn:hover {
+      border-color: var(--primary-color);
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--primary-color);
+    }
+
+    .type-btn.active {
+      border-color: var(--primary-color);
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .type-btn i {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    /* Form Styles */
+    .form-section {
+      background: var(--dark-surface);
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-color);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      background: var(--dark-surface-2);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      color: var(--text-primary);
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+    .form-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    /* Customization Options */
+    .customization {
+      background: var(--dark-surface);
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-color);
+      margin-top: 2rem;
+    }
+
+    .color-picker-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .color-picker {
+      width: 100%;
+      height: 3rem;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      background: none;
+    }
+
+    .size-slider {
+      width: 100%;
+      margin: 1rem 0;
+    }
+
+    /* Generate Button */
+    .generate-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      color: white;
+      border: none;
+      border-radius: 0.75rem;
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 1.5rem;
+    }
+
+    .generate-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .generate-btn:active {
+      transform: translateY(0);
+    }
+
+    .generate-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* QR Code Display */
+    .qr-display {
+      background: var(--dark-surface);
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-color);
+      text-align: center;
+    }
+
+    .qr-code-container {
+      background: white;
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 1rem 0;
+      display: inline-block;
+    }
+
+    .qr-code-img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 0.5rem;
+    }
+
+    .qr-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+
+    .action-btn {
+      background: var(--dark-surface-2);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .action-btn:hover {
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+      color: white;
+    }
+
+    .action-btn.download {
+      background: var(--secondary-color);
+      border-color: var(--secondary-color);
+      color: white;
+    }
+
+    .action-btn.download:hover {
+      background: #059669;
+      border-color: #059669;
+    }
+
+    /* Scanner Section */
+    .scanner-section {
+      background: var(--dark-surface);
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-color);
+      margin-top: 2rem;
+    }
+
+    .scanner-btn {
+      width: 100%;
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      border-radius: 0.75rem;
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .scanner-btn:hover {
+      background: #d97706;
+      transform: translateY(-2px);
+    }
+
+    .scanner-video {
+      width: 100%;
+      max-width: 400px;
+      border-radius: 0.5rem;
+      margin: 1rem 0;
+      display: none;
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--dark-surface);
+      border-top: 1px solid var(--border-color);
+      padding: 2rem 0;
+      text-align: center;
+      margin-top: 4rem;
+    }
+
+    .footer p {
+      color: var(--text-muted);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .main-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .header h1 {
+        font-size: 2rem;
+      }
+
+      .nav-container {
+        padding: 0 1rem;
+      }
+
+      .nav-links {
+        gap: 1rem;
+      }
+
+      .container {
+        padding: 6rem 1rem 2rem;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .color-picker-group {
+        grid-template-columns: 1fr;
+      }
+
+      .qr-actions {
+        flex-direction: column;
+      }
+    }
+
+    /* Loading Animation */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Hidden class */
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="./index.html" class="logo">
+        <i class="fas fa-qrcode"></i> QR Pro
+      </a>
+      <ul class="nav-links">
+        <li><a href="./index.html" class="nav-link">Trang chủ</a></li>
+        <li><a href="https://files.catbox.moe/kb9350.jpg" class="nav-link" target="_blank" rel="noopener noreferrer">Liên hệ</a></li>
+        <li><a href="https://donateqtu-code.vercel.app/" class="nav-link">Donate</a></li>
+      </ul>
+      <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>QR Code Generator Pro</h1>
+      <p>Tạo mã QR chuyên nghiệp với nhiều tùy chọn tùy chỉnh và chức năng quét</p>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Left Column - Form -->
+      <div class="form-column">
+        <!-- QR Type Selector -->
+        <div class="qr-type-selector">
+          <h2 class="section-title">Loại QR Code</h2>
+          <div class="type-buttons">
+            <button class="type-btn active" data-type="url">
+              <i class="fas fa-link"></i>
+              URL
+            </button>
+            <button class="type-btn" data-type="text">
+              <i class="fas fa-font"></i>
+              Text
+            </button>
+            <button class="type-btn" data-type="wifi">
+              <i class="fas fa-wifi"></i>
+              WiFi
+            </button>
+            <button class="type-btn" data-type="contact">
+              <i class="fas fa-address-card"></i>
+              Contact
+            </button>
+            <button class="type-btn" data-type="sms">
+              <i class="fas fa-sms"></i>
+              SMS
+            </button>
+            <button class="type-btn" data-type="email">
+              <i class="fas fa-envelope"></i>
+              Email
+            </button>
+    </div>
+  </div>
+
+        <!-- Form Section -->
+        <div class="form-section">
+          <h2 class="section-title">Thông tin</h2>
+          
+          <!-- URL Form -->
+          <div id="urlForm" class="form-content">
+            <div class="form-group">
+              <label class="form-label">URL</label>
+              <input type="url" class="form-input" id="urlInput" placeholder="https://example.com">
+            </div>
+          </div>
+
+          <!-- Text Form -->
+          <div id="textForm" class="form-content hidden">
+            <div class="form-group">
+              <label class="form-label">Nội dung</label>
+              <textarea class="form-input" id="textInput" rows="4" placeholder="Nhập nội dung văn bản..."></textarea>
+            </div>
+          </div>
+
+          <!-- WiFi Form -->
+          <div id="wifiForm" class="form-content hidden">
+            <div class="form-group">
+              <label class="form-label">Tên mạng (SSID)</label>
+              <input type="text" class="form-input" id="wifiSSID" placeholder="Tên WiFi">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mật khẩu</label>
+              <input type="password" class="form-input" id="wifiPassword" placeholder="Mật khẩu WiFi">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Bảo mật</label>
+              <select class="form-input" id="wifiSecurity">
+                <option value="WPA">WPA/WPA2</option>
+                <option value="WEP">WEP</option>
+                <option value="nopass">Không mật khẩu</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Contact Form -->
+          <div id="contactForm" class="form-content hidden">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Họ tên</label>
+                <input type="text" class="form-input" id="contactName" placeholder="Nguyễn Văn A">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Số điện thoại</label>
+                <input type="tel" class="form-input" id="contactPhone" placeholder="0123456789">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-input" id="contactEmail" placeholder="example@email.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Địa chỉ</label>
+              <input type="text" class="form-input" id="contactAddress" placeholder="Địa chỉ">
+            </div>
+          </div>
+
+          <!-- SMS Form -->
+          <div id="smsForm" class="form-content hidden">
+            <div class="form-group">
+              <label class="form-label">Số điện thoại</label>
+              <input type="tel" class="form-input" id="smsPhone" placeholder="0123456789">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nội dung tin nhắn</label>
+              <textarea class="form-input" id="smsMessage" rows="3" placeholder="Nội dung tin nhắn..."></textarea>
+            </div>
+          </div>
+
+          <!-- Email Form -->
+          <div id="emailForm" class="form-content hidden">
+            <div class="form-group">
+              <label class="form-label">Email người nhận</label>
+              <input type="email" class="form-input" id="emailTo" placeholder="recipient@email.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tiêu đề</label>
+              <input type="text" class="form-input" id="emailSubject" placeholder="Tiêu đề email">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nội dung</label>
+              <textarea class="form-input" id="emailBody" rows="4" placeholder="Nội dung email..."></textarea>
+            </div>
+          </div>
+
+          <!-- Customization Options -->
+          <div class="customization">
+            <h3 class="section-title">Tùy chỉnh</h3>
+            <div class="form-group">
+              <label class="form-label">Kích thước</label>
+              <input type="range" class="size-slider" id="sizeSlider" min="100" max="500" value="300">
+              <span id="sizeValue">300px</span>
+            </div>
+            <div class="color-picker-group">
+              <div class="form-group">
+                <label class="form-label">Màu nền</label>
+                <input type="color" class="color-picker" id="bgColor" value="#ffffff">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Màu mã</label>
+                <input type="color" class="color-picker" id="fgColor" value="#000000">
+              </div>
+            </div>
+            
+            <!-- Logo Integration -->
+            <div class="logo-section">
+              <h4 class="section-subtitle">Logo</h4>
+              <div class="form-group">
+                <label class="form-label">Thêm logo</label>
+                <input type="file" class="form-input" id="logoUpload" accept="image/*">
+                <button class="remove-logo-btn hidden" id="removeLogoBtn">
+                  <i class="fas fa-times"></i> Xóa logo
+                </button>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Kích thước logo (%)</label>
+                <input type="range" class="size-slider" id="logoSizeSlider" min="10" max="30" value="20">
+                <span id="logoSizeValue">20%</span>
+              </div>
+              <div class="logo-preview" id="logoPreview" style="display: none;">
+                <img id="logoPreviewImg" alt="Logo preview">
+              </div>
+            </div>
+
+            <!-- QR Code Effects -->
+            <div class="effects-section">
+              <h4 class="section-subtitle">Hiệu ứng</h4>
+              <div class="form-group">
+                <label class="form-label">Kiểu góc</label>
+                <select class="form-input" id="cornerStyle">
+                  <option value="square">Vuông</option>
+                  <option value="rounded">Bo góc</option>
+                  <option value="circle">Tròn</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Hiệu ứng màu</label>
+                <select class="form-input" id="colorEffect">
+                  <option value="solid">Đơn sắc</option>
+                  <option value="gradient">Gradient</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <button class="generate-btn" id="generateBtn">
+            <i class="fas fa-magic"></i>
+            Tạo QR Code
+          </button>
+        </div>
+
+        <!-- Scanner Section -->
+        <div class="scanner-section">
+          <h3 class="section-title">Quét QR Code</h3>
+          <button class="scanner-btn" id="scannerBtn">
+            <i class="fas fa-camera"></i>
+            Mở Camera
+          </button>
+          <video class="scanner-video" id="scannerVideo" autoplay></video>
+          <div id="scannerResult" class="hidden"></div>
+        </div>
+
+        <!-- Batch Generation Section -->
+        <div class="batch-section">
+          <h3 class="section-title">
+            <i class="fas fa-layer-group"></i>
+            Tạo hàng loạt
+          </h3>
+          <div class="batch-controls">
+            <div class="form-group">
+              <label class="form-label">Chọn file CSV</label>
+              <input type="file" class="form-input" id="csvUpload" accept=".csv">
+              <small class="form-help">Format: type,data1,data2,... (URL,https://example.com)</small>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Hoặc nhập dữ liệu</label>
+              <textarea class="form-input" id="batchData" rows="5" placeholder="URL,https://example.com&#10;TEXT,Hello World&#10;WIFI,MyWiFi,password123"></textarea>
+            </div>
+            <button class="batch-btn" id="batchGenerateBtn">
+              <i class="fas fa-magic"></i>
+              Tạo hàng loạt
+            </button>
+          </div>
+          <div class="batch-progress hidden" id="batchProgress">
+            <div class="progress-bar">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">0/0</div>
+          </div>
+          <div class="batch-results hidden" id="batchResults">
+            <h4>Kết quả:</h4>
+            <div class="batch-list" id="batchList"></div>
+            <button class="download-all-btn" id="downloadAllBtn">
+              <i class="fas fa-download"></i>
+              Tải tất cả (ZIP)
+            </button>
+          </div>
+        </div>
+
+        <!-- Analytics Dashboard -->
+        <div class="analytics-section">
+          <h3 class="section-title">
+            <i class="fas fa-chart-bar"></i>
+            Thống kê nâng cao
+            <button class="refresh-stats-btn" id="refreshStatsBtn" title="Làm mới">
+              <i class="fas fa-sync-alt"></i>
+            </button>
+          </h3>
+          
+          <!-- Advanced Analytics Tabs -->
+          <div class="analytics-tabs">
+            <button class="tab-btn active" data-tab="overview">Tổng quan</button>
+            <button class="tab-btn" data-tab="realtime">Thời gian thực</button>
+            <button class="tab-btn" data-tab="geographic">Địa lý</button>
+            <button class="tab-btn" data-tab="devices">Thiết bị</button>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-qrcode"></i>
+              </div>
+              <div class="stat-content">
+                <div class="stat-number" id="totalQRCodes">0</div>
+                <div class="stat-label">Tổng QR Code</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-link"></i>
+              </div>
+              <div class="stat-content">
+                <div class="stat-number" id="urlCount">0</div>
+                <div class="stat-label">URL</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-wifi"></i>
+              </div>
+              <div class="stat-content">
+                <div class="stat-number" id="wifiCount">0</div>
+                <div class="stat-label">WiFi</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-address-card"></i>
+              </div>
+              <div class="stat-content">
+                <div class="stat-number" id="contactCount">0</div>
+                <div class="stat-label">Contact</div>
+              </div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="qrChart" width="400" height="200"></canvas>
+          </div>
+          <!-- Real-time Analytics Panel -->
+          <div class="realtime-panel hidden" id="realtimePanel">
+            <div class="realtime-stats">
+              <div class="realtime-item">
+                <span class="realtime-label">Quét trong 1h:</span>
+                <span class="realtime-value" id="scansLastHour">0</span>
+              </div>
+              <div class="realtime-item">
+                <span class="realtime-label">Quét hôm nay:</span>
+                <span class="realtime-value" id="scansToday">0</span>
+              </div>
+              <div class="realtime-item">
+                <span class="realtime-label">Đang online:</span>
+                <span class="realtime-value" id="activeUsers">0</span>
+              </div>
+            </div>
+            <div class="realtime-chart">
+              <canvas id="realtimeChart" width="400" height="150"></canvas>
+            </div>
+          </div>
+
+          <!-- Geographic Analytics Panel -->
+          <div class="geographic-panel hidden" id="geographicPanel">
+            <div class="map-container">
+              <div class="map-placeholder">
+                <i class="fas fa-map-marked-alt"></i>
+                <p>Bản đồ vị trí quét QR</p>
+                <small>Dữ liệu vị trí sẽ hiển thị ở đây</small>
+              </div>
+            </div>
+            <div class="location-stats">
+              <h4>Top vị trí quét:</h4>
+              <div class="location-list" id="locationList">
+                <div class="location-item">
+                  <span class="location-name">Hà Nội</span>
+                  <span class="location-count">45 lần</span>
+                </div>
+                <div class="location-item">
+                  <span class="location-name">TP.HCM</span>
+                  <span class="location-count">32 lần</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Device Analytics Panel -->
+          <div class="device-panel hidden" id="devicePanel">
+            <div class="device-stats">
+              <div class="device-category">
+                <h4>Hệ điều hành</h4>
+                <div class="device-chart">
+                  <div class="device-item">
+                    <span class="device-name">Android</span>
+                    <div class="device-bar">
+                      <div class="device-fill" style="width: 60%"></div>
+                    </div>
+                    <span class="device-percent">60%</span>
+                  </div>
+                  <div class="device-item">
+                    <span class="device-name">iOS</span>
+                    <div class="device-bar">
+                      <div class="device-fill" style="width: 30%"></div>
+                    </div>
+                    <span class="device-percent">30%</span>
+                  </div>
+                  <div class="device-item">
+                    <span class="device-name">Windows</span>
+                    <div class="device-bar">
+                      <div class="device-fill" style="width: 10%"></div>
+                    </div>
+                    <span class="device-percent">10%</span>
+                  </div>
+                </div>
+              </div>
+              <div class="device-category">
+                <h4>Trình duyệt</h4>
+                <div class="device-chart">
+                  <div class="device-item">
+                    <span class="device-name">Chrome</span>
+                    <div class="device-bar">
+                      <div class="device-fill" style="width: 70%"></div>
+                    </div>
+                    <span class="device-percent">70%</span>
+                  </div>
+                  <div class="device-item">
+                    <span class="device-name">Safari</span>
+                    <div class="device-bar">
+                      <div class="device-fill" style="width: 20%"></div>
+                    </div>
+                    <span class="device-percent">20%</span>
+                  </div>
+                  <div class="device-item">
+                    <span class="device-name">Firefox</span>
+                    <div class="device-bar">
+                      <div class="device-fill" style="width: 10%"></div>
+                    </div>
+                    <span class="device-percent">10%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="export-stats">
+            <button class="export-btn" id="exportStatsBtn">
+              <i class="fas fa-download"></i>
+              Xuất báo cáo
+            </button>
+            <button class="export-btn" id="exportAdvancedBtn">
+              <i class="fas fa-file-excel"></i>
+              Xuất Excel
+            </button>
+          </div>
+        </div>
+
+        <!-- Template Section -->
+        <div class="template-section">
+          <h3 class="section-title">
+            <i class="fas fa-layer-group"></i>
+            Templates
+            <button class="add-template-btn" id="addTemplateBtn" title="Thêm template">
+              <i class="fas fa-plus"></i>
+            </button>
+          </h3>
+          <div class="template-grid" id="templateGrid">
+            <div class="template-item" data-template="business-card">
+              <div class="template-preview">
+                <i class="fas fa-id-card"></i>
+              </div>
+              <div class="template-name">Business Card</div>
+              <div class="template-actions">
+                <button class="template-use-btn" onclick="qrGenerator.useTemplate('business-card')">
+                  <i class="fas fa-play"></i>
+                </button>
+                <button class="template-edit-btn" onclick="qrGenerator.editTemplate('business-card')">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </div>
+            </div>
+            <div class="template-item" data-template="restaurant-menu">
+              <div class="template-preview">
+                <i class="fas fa-utensils"></i>
+              </div>
+              <div class="template-name">Restaurant Menu</div>
+              <div class="template-actions">
+                <button class="template-use-btn" onclick="qrGenerator.useTemplate('restaurant-menu')">
+                  <i class="fas fa-play"></i>
+                </button>
+                <button class="template-edit-btn" onclick="qrGenerator.editTemplate('restaurant-menu')">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </div>
+            </div>
+            <div class="template-item" data-template="event-info">
+              <div class="template-preview">
+                <i class="fas fa-calendar"></i>
+              </div>
+              <div class="template-name">Event Info</div>
+              <div class="template-actions">
+                <button class="template-use-btn" onclick="qrGenerator.useTemplate('event-info')">
+                  <i class="fas fa-play"></i>
+                </button>
+                <button class="template-edit-btn" onclick="qrGenerator.editTemplate('event-info')">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic QR Code Section -->
+        <div class="dynamic-qr-section">
+          <h3 class="section-title">
+            <i class="fas fa-magic"></i>
+            QR Code Động
+            <button class="create-dynamic-btn" id="createDynamicBtn" title="Tạo QR động">
+              <i class="fas fa-plus"></i>
+            </button>
+          </h3>
+          
+          <div class="dynamic-qr-controls">
+            <div class="form-group">
+              <label class="form-label">Tên QR Code</label>
+              <input type="text" class="form-input" id="dynamicQrName" placeholder="Nhập tên QR Code...">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">URL gốc</label>
+              <input type="url" class="form-input" id="dynamicQrUrl" placeholder="https://example.com">
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Thời hạn (ngày)</label>
+                <input type="number" class="form-input" id="dynamicQrExpiry" placeholder="30" min="1" max="365">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Giới hạn quét</label>
+                <input type="number" class="form-input" id="dynamicQrLimit" placeholder="1000" min="1">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Mật khẩu bảo vệ</label>
+              <input type="password" class="form-input" id="dynamicQrPassword" placeholder="Mật khẩu (tùy chọn)">
+            </div>
+            
+            <button class="generate-btn" id="generateDynamicBtn">
+              <i class="fas fa-magic"></i>
+              Tạo QR Code Động
+            </button>
+          </div>
+          
+          <div class="dynamic-qr-list" id="dynamicQrList">
+            <div class="dynamic-qr-item">
+              <div class="dynamic-qr-info">
+                <h4>QR Code Demo</h4>
+                <p>https://example.com</p>
+                <div class="dynamic-qr-meta">
+                  <span class="meta-item">Còn lại: 15 ngày</span>
+                  <span class="meta-item">Đã quét: 45/1000</span>
+                  <span class="meta-item">Trạng thái: Hoạt động</span>
+                </div>
+              </div>
+              <div class="dynamic-qr-actions">
+                <button class="action-btn edit" title="Chỉnh sửa">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="action-btn stats" title="Thống kê">
+                  <i class="fas fa-chart-line"></i>
+                </button>
+                <button class="action-btn copy" title="Sao chép">
+                  <i class="fas fa-copy"></i>
+                </button>
+                <button class="action-btn delete" title="Xóa">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings Section -->
+        <div class="settings-section">
+          <h3 class="section-title">
+            <i class="fas fa-cog"></i>
+            Cài đặt
+          </h3>
+          <div class="settings-controls">
+            <button class="settings-btn export" id="exportSettingsBtn">
+              <i class="fas fa-download"></i>
+              Xuất cài đặt
+            </button>
+            <button class="settings-btn import" id="importSettingsBtn">
+              <i class="fas fa-upload"></i>
+              Nhập cài đặt
+            </button>
+          </div>
+          <input type="file" id="settingsFileInput" accept=".json" style="display: none;">
+        </div>
+
+        <!-- History Section -->
+        <div class="history-section">
+          <h3 class="section-title">
+            <i class="fas fa-history"></i>
+            Lịch sử QR Code
+            <button class="clear-history-btn" id="clearHistoryBtn" title="Xóa tất cả">
+              <i class="fas fa-trash"></i>
+            </button>
+          </h3>
+          <div class="history-controls">
+            <input type="text" class="form-input" id="historySearch" placeholder="Tìm kiếm trong lịch sử...">
+            <select class="form-input" id="historyFilter">
+              <option value="all">Tất cả</option>
+              <option value="url">URL</option>
+              <option value="text">Text</option>
+              <option value="wifi">WiFi</option>
+              <option value="contact">Contact</option>
+              <option value="sms">SMS</option>
+              <option value="email">Email</option>
+            </select>
+          </div>
+          <div class="history-list" id="historyList">
+            <div class="history-empty">
+              <i class="fas fa-qrcode"></i>
+              <p>Chưa có QR code nào được tạo</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column - QR Display -->
+      <div class="qr-display">
+        <h2 class="section-title">Mã QR Code</h2>
+        <div class="qr-code-container">
+          <img class="qr-code-img" id="qrCodeImg" src="" alt="QR Code" style="display: none;">
+          <div id="qrPlaceholder" class="qr-placeholder">
+            <i class="fas fa-qrcode" style="font-size: 4rem; color: #ccc; margin-bottom: 1rem;"></i>
+            <p>Mã QR sẽ hiển thị ở đây</p>
+          </div>
+        </div>
+        <div class="qr-actions" id="qrActions" style="display: none;">
+          <button class="action-btn download" id="downloadBtn">
+            <i class="fas fa-download"></i>
+            Tải xuống
+          </button>
+          <button class="action-btn" id="copyBtn">
+            <i class="fas fa-copy"></i>
+            Copy
+          </button>
+          <button class="action-btn" id="shareBtn">
+            <i class="fas fa-share"></i>
+            Chia sẻ
+          </button>
+        </div>
+    </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2025 By Qtudev. Tất cả quyền được bảo lưu.</p>
+  </footer>
+
+  <!-- PWA Elements -->
+  <button class="install-btn" id="installBtn">
+    <i class="fas fa-download"></i>
+    Cài đặt App
+  </button>
+  
+  <div class="offline-indicator" id="offlineIndicator">
+    <i class="fas fa-wifi"></i>
+    Đang offline
+  </div>
+  <script>
+    // QR Code Generator Pro - Advanced JavaScript
+    class QRCodeGenerator {
+      constructor() {
+        this.currentType = 'url';
+        this.qrCodeImg = document.getElementById('qrCodeImg');
+        this.qrPlaceholder = document.getElementById('qrPlaceholder');
+        this.qrActions = document.getElementById('qrActions');
+        this.generateBtn = document.getElementById('generateBtn');
+        this.sizeSlider = document.getElementById('sizeSlider');
+        this.sizeValue = document.getElementById('sizeValue');
+        this.bgColor = document.getElementById('bgColor');
+        this.fgColor = document.getElementById('fgColor');
+        this.scannerBtn = document.getElementById('scannerBtn');
+        this.scannerVideo = document.getElementById('scannerVideo');
+        this.scannerResult = document.getElementById('scannerResult');
+        this.themeToggle = document.getElementById('themeToggle');
+        
+        // New features
+        this.historyList = document.getElementById('historyList');
+        this.historySearch = document.getElementById('historySearch');
+        this.historyFilter = document.getElementById('historyFilter');
+        this.clearHistoryBtn = document.getElementById('clearHistoryBtn');
+        this.logoUpload = document.getElementById('logoUpload');
+        this.logoPreview = document.getElementById('logoPreview');
+        this.logoPreviewImg = document.getElementById('logoPreviewImg');
+        this.removeLogoBtn = document.getElementById('removeLogoBtn');
+        this.logoSizeSlider = document.getElementById('logoSizeSlider');
+        this.logoSizeValue = document.getElementById('logoSizeValue');
+        this.cornerStyle = document.getElementById('cornerStyle');
+        this.colorEffect = document.getElementById('colorEffect');
+        
+        // Batch Generation
+        this.csvUpload = document.getElementById('csvUpload');
+        this.batchData = document.getElementById('batchData');
+        this.batchGenerateBtn = document.getElementById('batchGenerateBtn');
+        this.batchProgress = document.getElementById('batchProgress');
+        this.progressFill = document.getElementById('progressFill');
+        this.progressText = document.getElementById('progressText');
+        this.batchResults = document.getElementById('batchResults');
+        this.batchList = document.getElementById('batchList');
+        this.downloadAllBtn = document.getElementById('downloadAllBtn');
+        
+        // PWA
+        this.installBtn = document.getElementById('installBtn');
+        this.offlineIndicator = document.getElementById('offlineIndicator');
+        this.deferredPrompt = null;
+        
+        // Analytics
+        this.refreshStatsBtn = document.getElementById('refreshStatsBtn');
+        this.totalQRCodes = document.getElementById('totalQRCodes');
+        this.urlCount = document.getElementById('urlCount');
+        this.wifiCount = document.getElementById('wifiCount');
+        this.contactCount = document.getElementById('contactCount');
+        this.exportStatsBtn = document.getElementById('exportStatsBtn');
+        this.exportAdvancedBtn = document.getElementById('exportAdvancedBtn');
+        this.qrChart = document.getElementById('qrChart');
+        
+        // Advanced Analytics
+        this.analyticsTabs = document.querySelectorAll('.tab-btn');
+        this.realtimePanel = document.getElementById('realtimePanel');
+        this.geographicPanel = document.getElementById('geographicPanel');
+        this.devicePanel = document.getElementById('devicePanel');
+        this.scansLastHour = document.getElementById('scansLastHour');
+        this.scansToday = document.getElementById('scansToday');
+        this.activeUsers = document.getElementById('activeUsers');
+        this.realtimeChart = document.getElementById('realtimeChart');
+        
+        // Dynamic QR
+        this.createDynamicBtn = document.getElementById('createDynamicBtn');
+        this.generateDynamicBtn = document.getElementById('generateDynamicBtn');
+        this.dynamicQrName = document.getElementById('dynamicQrName');
+        this.dynamicQrUrl = document.getElementById('dynamicQrUrl');
+        this.dynamicQrExpiry = document.getElementById('dynamicQrExpiry');
+        this.dynamicQrLimit = document.getElementById('dynamicQrLimit');
+        this.dynamicQrPassword = document.getElementById('dynamicQrPassword');
+        this.dynamicQrList = document.getElementById('dynamicQrList');
+        
+        // Templates
+        this.addTemplateBtn = document.getElementById('addTemplateBtn');
+        this.templateGrid = document.getElementById('templateGrid');
+        
+        // Settings
+        this.exportSettingsBtn = document.getElementById('exportSettingsBtn');
+        this.importSettingsBtn = document.getElementById('importSettingsBtn');
+        this.settingsFileInput = document.getElementById('settingsFileInput');
+        
+        this.history = JSON.parse(localStorage.getItem('qrHistory') || '[]');
+        this.currentLogo = null;
+        this.batchResults = [];
+        this.templates = JSON.parse(localStorage.getItem('qrTemplates') || '[]');
+        this.dynamicQrCodes = JSON.parse(localStorage.getItem('dynamicQrCodes') || '[]');
+        this.analyticsData = JSON.parse(localStorage.getItem('analyticsData') || '{}');
+        
+        this.init();
+      }
+
+      init() {
+        this.setupEventListeners();
+        this.setupThemeToggle();
+        this.setupSizeSlider();
+        this.setupScanner();
+        this.setupHistory();
+        this.setupLogoUpload();
+        this.setupEffects();
+        this.setupBatchGeneration();
+        this.setupPWA();
+        this.setupAnalytics();
+        this.setupAdvancedAnalytics();
+        this.setupDynamicQR();
+        this.setupTemplates();
+        this.setupSettings();
+        this.loadHistory();
+        this.updateAnalytics();
+      }
+
+      setupEventListeners() {
+        // Type buttons
+        document.querySelectorAll('.type-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            this.switchType(e.target.closest('.type-btn').dataset.type);
+          });
+        });
+
+        // Generate button
+        this.generateBtn.addEventListener('click', () => {
+          this.generateQRCode();
+        });
+
+        // Download button
+        document.getElementById('downloadBtn').addEventListener('click', () => {
+          this.downloadQRCode();
+        });
+
+        // Copy button
+        document.getElementById('copyBtn').addEventListener('click', () => {
+          this.copyQRCode();
+        });
+
+        // Share button
+        document.getElementById('shareBtn').addEventListener('click', () => {
+          this.shareQRCode();
+        });
+
+        // Color pickers
+        this.bgColor.addEventListener('change', () => {
+          if (this.qrCodeImg.src) this.generateQRCode();
+        });
+        this.fgColor.addEventListener('change', () => {
+          if (this.qrCodeImg.src) this.generateQRCode();
+        });
+
+        // Effects
+        this.cornerStyle.addEventListener('change', () => {
+          if (this.qrCodeImg.src) this.generateQRCode();
+        });
+        this.colorEffect.addEventListener('change', () => {
+          if (this.qrCodeImg.src) this.generateQRCode();
+        });
+      }
+
+      setupThemeToggle() {
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        
+        this.themeToggle.addEventListener('click', () => {
+          const currentTheme = document.documentElement.getAttribute('data-theme');
+          const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', newTheme);
+          localStorage.setItem('theme', newTheme);
+          
+          const icon = this.themeToggle.querySelector('i');
+          icon.className = newTheme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+        });
+
+        // Set initial icon
+        const icon = this.themeToggle.querySelector('i');
+        icon.className = savedTheme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+      }
+
+      setupSizeSlider() {
+        this.sizeSlider.addEventListener('input', (e) => {
+          this.sizeValue.textContent = e.target.value + 'px';
+          if (this.qrCodeImg.src) this.generateQRCode();
+        });
+      }
+
+      setupScanner() {
+        this.scannerBtn.addEventListener('click', () => {
+          this.toggleScanner();
+        });
+      }
+
+      setupHistory() {
+        this.historySearch.addEventListener('input', () => {
+          this.filterHistory();
+        });
+        
+        this.historyFilter.addEventListener('change', () => {
+          this.filterHistory();
+        });
+        
+        this.clearHistoryBtn.addEventListener('click', () => {
+          this.clearHistory();
+        });
+      }
+
+      setupLogoUpload() {
+        this.logoUpload.addEventListener('change', (e) => {
+          this.handleLogoUpload(e);
+        });
+        
+        this.removeLogoBtn.addEventListener('click', () => {
+          this.removeLogo();
+        });
+        
+        this.logoSizeSlider.addEventListener('input', (e) => {
+          this.logoSizeValue.textContent = e.target.value + '%';
+          if (this.qrCodeImg.src) this.generateQRCode();
+        });
+      }
+
+      setupEffects() {
+        // Effects are handled in setupEventListeners
+      }
+
+      setupBatchGeneration() {
+        this.csvUpload.addEventListener('change', (e) => {
+          this.handleCSVUpload(e);
+        });
+        
+        this.batchGenerateBtn.addEventListener('click', () => {
+          this.generateBatch();
+        });
+        
+        this.downloadAllBtn.addEventListener('click', () => {
+          this.downloadAllBatch();
+        });
+      }
+
+      setupPWA() {
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+              console.log('SW registered: ', registration);
+            })
+            .catch((registrationError) => {
+              console.log('SW registration failed: ', registrationError);
+            });
+        }
+
+        // Install prompt
+        window.addEventListener('beforeinstallprompt', (e) => {
+          e.preventDefault();
+          this.deferredPrompt = e;
+          this.installBtn.classList.add('show');
+        });
+
+        this.installBtn.addEventListener('click', () => {
+          if (this.deferredPrompt) {
+            this.deferredPrompt.prompt();
+            this.deferredPrompt.userChoice.then((choiceResult) => {
+              if (choiceResult.outcome === 'accepted') {
+                console.log('User accepted the install prompt');
+              }
+              this.deferredPrompt = null;
+              this.installBtn.classList.remove('show');
+            });
+          }
+        });
+
+        // Online/Offline detection
+        window.addEventListener('online', () => {
+          this.offlineIndicator.classList.remove('show');
+          this.showNotification('Đã kết nối lại internet!', 'success');
+        });
+
+        window.addEventListener('offline', () => {
+          this.offlineIndicator.classList.add('show');
+          this.showNotification('Mất kết nối internet!', 'error');
+        });
+
+        // Check initial online status
+        if (!navigator.onLine) {
+          this.offlineIndicator.classList.add('show');
+        }
+      }
+
+      switchType(type) {
+        this.currentType = type;
+        
+        // Update active button
+        document.querySelectorAll('.type-btn').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        document.querySelector(`[data-type="${type}"]`).classList.add('active');
+
+        // Show/hide forms
+        document.querySelectorAll('.form-content').forEach(form => {
+          form.classList.add('hidden');
+        });
+        document.getElementById(`${type}Form`).classList.remove('hidden');
+      }
+
+      generateQRCode() {
+        const data = this.getFormData();
+        if (!data) {
+          this.showNotification('Vui lòng nhập đầy đủ thông tin!', 'error');
+        return;
+      }
+
+        this.generateBtn.innerHTML = '<div class="loading"></div> Đang tạo...';
+        this.generateBtn.disabled = true;
+
+        const size = this.sizeSlider.value;
+        const bgColor = this.bgColor.value.replace('#', '');
+        const fgColor = this.fgColor.value.replace('#', '');
+        
+        let qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(data)}&bgcolor=${bgColor}&color=${fgColor}&format=png`;
+        
+        // Add effects
+        if (this.cornerStyle.value === 'rounded') {
+          qrUrl += '&margin=10';
+        }
+
+        this.qrCodeImg.onload = () => {
+          this.qrPlaceholder.style.display = 'none';
+          this.qrCodeImg.style.display = 'block';
+          this.qrActions.style.display = 'flex';
+          this.generateBtn.innerHTML = '<i class="fas fa-magic"></i> Tạo QR Code';
+          this.generateBtn.disabled = false;
+          
+          // Add logo overlay if exists
+          this.addLogoOverlay();
+          
+          // Save to history
+          this.saveToHistory(data);
+          
+          this.showNotification('Tạo QR Code thành công!', 'success');
+        };
+
+        this.qrCodeImg.onerror = () => {
+          this.showNotification('Lỗi khi tạo QR Code!', 'error');
+          this.generateBtn.innerHTML = '<i class="fas fa-magic"></i> Tạo QR Code';
+          this.generateBtn.disabled = false;
+        };
+
+        this.qrCodeImg.src = qrUrl;
+      }
+
+      getFormData() {
+        switch (this.currentType) {
+          case 'url':
+            const url = document.getElementById('urlInput').value.trim();
+            return url ? url : null;
+
+          case 'text':
+            const text = document.getElementById('textInput').value.trim();
+            return text ? text : null;
+
+          case 'wifi':
+            const ssid = document.getElementById('wifiSSID').value.trim();
+            const password = document.getElementById('wifiPassword').value;
+            const security = document.getElementById('wifiSecurity').value;
+            if (!ssid) return null;
+            return `WIFI:T:${security};S:${ssid};P:${password};H:false;;`;
+
+          case 'contact':
+            const name = document.getElementById('contactName').value.trim();
+            const phone = document.getElementById('contactPhone').value.trim();
+            const email = document.getElementById('contactEmail').value.trim();
+            const address = document.getElementById('contactAddress').value.trim();
+            if (!name) return null;
+            
+            let vcard = `BEGIN:VCARD\nVERSION:3.0\nFN:${name}`;
+            if (phone) vcard += `\nTEL:${phone}`;
+            if (email) vcard += `\nEMAIL:${email}`;
+            if (address) vcard += `\nADR:${address}`;
+            vcard += '\nEND:VCARD';
+            return vcard;
+
+          case 'sms':
+            const smsPhone = document.getElementById('smsPhone').value.trim();
+            const message = document.getElementById('smsMessage').value.trim();
+            if (!smsPhone) return null;
+            return `sms:${smsPhone}${message ? `:${message}` : ''}`;
+
+          case 'email':
+            const to = document.getElementById('emailTo').value.trim();
+            const subject = document.getElementById('emailSubject').value.trim();
+            const body = document.getElementById('emailBody').value.trim();
+            if (!to) return null;
+            return `mailto:${to}${subject ? `?subject=${encodeURIComponent(subject)}` : ''}${body ? `${subject ? '&' : '?'}body=${encodeURIComponent(body)}` : ''}`;
+
+          default:
+            return null;
+        }
+      }
+
+      downloadQRCode() {
+        if (!this.qrCodeImg.src) return;
+
+        const link = document.createElement('a');
+        link.download = `qrcode-${this.currentType}-${Date.now()}.png`;
+        link.href = this.qrCodeImg.src;
+        link.click();
+        this.showNotification('Đã tải xuống QR Code!', 'success');
+      }
+
+      async copyQRCode() {
+        if (!this.qrCodeImg.src) return;
+
+        try {
+          const response = await fetch(this.qrCodeImg.src);
+          const blob = await response.blob();
+          await navigator.clipboard.write([
+            new ClipboardItem({ 'image/png': blob })
+          ]);
+          this.showNotification('Đã copy QR Code!', 'success');
+        } catch (err) {
+          this.showNotification('Không thể copy QR Code!', 'error');
+        }
+      }
+
+      async shareQRCode() {
+        if (!navigator.share) {
+          this.copyQRCode();
+          return;
+        }
+
+        try {
+          const response = await fetch(this.qrCodeImg.src);
+          const blob = await response.blob();
+          const file = new File([blob], 'qrcode.png', { type: 'image/png' });
+          
+          await navigator.share({
+            title: 'QR Code',
+            text: 'Mã QR Code được tạo từ QR Generator Pro',
+            files: [file]
+          });
+        } catch (err) {
+          this.copyQRCode();
+        }
+      }
+
+      async toggleScanner() {
+        if (this.scannerVideo.style.display === 'none') {
+          try {
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+              video: { facingMode: 'environment' } 
+            });
+            this.scannerVideo.srcObject = stream;
+            this.scannerVideo.style.display = 'block';
+            this.scannerBtn.innerHTML = '<i class="fas fa-stop"></i> Dừng Camera';
+            this.startScanning();
+          } catch (err) {
+            this.showNotification('Không thể truy cập camera!', 'error');
+          }
+        } else {
+          this.stopScanner();
+        }
+      }
+
+      stopScanner() {
+        if (this.scannerVideo.srcObject) {
+          this.scannerVideo.srcObject.getTracks().forEach(track => track.stop());
+        }
+        this.scannerVideo.style.display = 'none';
+        this.scannerBtn.innerHTML = '<i class="fas fa-camera"></i> Mở Camera';
+        this.scannerResult.classList.add('hidden');
+      }
+
+      startScanning() {
+        // Simple QR code detection using canvas
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        const scan = () => {
+          if (this.scannerVideo.style.display === 'none') return;
+          
+          canvas.width = this.scannerVideo.videoWidth;
+          canvas.height = this.scannerVideo.videoHeight;
+          ctx.drawImage(this.scannerVideo, 0, 0);
+          
+          // Here you would integrate a QR code detection library
+          // For now, we'll show a placeholder
+          setTimeout(scan, 100);
+        };
+        
+        this.scannerVideo.addEventListener('loadedmetadata', scan);
+      }
+
+      showNotification(message, type = 'info') {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.innerHTML = `
+          <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+          ${message}
+        `;
+        
+        // Add styles
+        Object.assign(notification.style, {
+          position: 'fixed',
+          top: '100px',
+          right: '20px',
+          background: type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#6366f1',
+          color: 'white',
+          padding: '1rem 1.5rem',
+          borderRadius: '0.5rem',
+          boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
+          zIndex: '10000',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+          fontSize: '0.9rem',
+          fontWeight: '500',
+          transform: 'translateX(100%)',
+          transition: 'transform 0.3s ease'
+        });
+
+        document.body.appendChild(notification);
+
+        // Animate in
+        setTimeout(() => {
+          notification.style.transform = 'translateX(0)';
+        }, 100);
+
+        // Remove after 3 seconds
+        setTimeout(() => {
+          notification.style.transform = 'translateX(100%)';
+          setTimeout(() => {
+            document.body.removeChild(notification);
+          }, 300);
+        }, 3000);
+      }
+
+      // History Methods
+      saveToHistory(data) {
+        const historyItem = {
+          id: Date.now(),
+          type: this.currentType,
+          data: data,
+          timestamp: new Date().toISOString(),
+          size: this.sizeSlider.value,
+          bgColor: this.bgColor.value,
+          fgColor: this.fgColor.value,
+          logo: this.currentLogo
+        };
+        
+        this.history.unshift(historyItem);
+        this.history = this.history.slice(0, 50); // Keep only last 50 items
+        localStorage.setItem('qrHistory', JSON.stringify(this.history));
+        this.loadHistory();
+      }
+
+      loadHistory() {
+        if (this.history.length === 0) {
+          this.historyList.innerHTML = `
+            <div class="history-empty">
+              <i class="fas fa-qrcode"></i>
+              <p>Chưa có QR code nào được tạo</p>
+            </div>
+          `;
+          return;
+        }
+
+        this.historyList.innerHTML = this.history.map(item => {
+          const date = new Date(item.timestamp).toLocaleDateString('vi-VN');
+          const title = this.getHistoryTitle(item);
+          const desc = this.getHistoryDescription(item);
+          
+          return `
+            <div class="history-item" data-id="${item.id}">
+              <div class="history-item-header">
+                <span class="history-item-type">${item.type.toUpperCase()}</span>
+                <span class="history-item-date">${date}</span>
+              </div>
+              <div class="history-item-preview">
+                <div class="history-item-qr">
+                  <img src="https://api.qrserver.com/v1/create-qr-code/?size=60x60&data=${encodeURIComponent(item.data)}" alt="QR Preview">
+                </div>
+                <div class="history-item-content">
+                  <div class="history-item-title">${title}</div>
+                  <div class="history-item-desc">${desc}</div>
+                </div>
+                <div class="history-item-actions">
+                  <button class="history-action-btn" onclick="qrGenerator.loadFromHistory('${item.id}')">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="history-action-btn" onclick="qrGenerator.downloadFromHistory('${item.id}')">
+                    <i class="fas fa-download"></i>
+                  </button>
+                  <button class="history-action-btn delete" onclick="qrGenerator.deleteFromHistory('${item.id}')">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      getHistoryTitle(item) {
+        switch (item.type) {
+          case 'url':
+            return item.data.length > 30 ? item.data.substring(0, 30) + '...' : item.data;
+          case 'text':
+            return item.data.length > 30 ? item.data.substring(0, 30) + '...' : item.data;
+          case 'wifi':
+            const ssid = item.data.match(/S:([^;]+)/);
+            return ssid ? ssid[1] : 'WiFi QR Code';
+          case 'contact':
+            const name = item.data.match(/FN:([^\n]+)/);
+            return name ? name[1] : 'Contact QR Code';
+          case 'sms':
+            const phone = item.data.match(/sms:([^:]+)/);
+            return phone ? phone[1] : 'SMS QR Code';
+          case 'email':
+            const email = item.data.match(/mailto:([^?]+)/);
+            return email ? email[1] : 'Email QR Code';
+          default:
+            return 'QR Code';
+        }
+      }
+
+      getHistoryDescription(item) {
+        const date = new Date(item.timestamp).toLocaleString('vi-VN');
+        return `Tạo lúc: ${date}`;
+      }
+
+      filterHistory() {
+        const searchTerm = this.historySearch.value.toLowerCase();
+        const filterType = this.historyFilter.value;
+        
+        const filteredHistory = this.history.filter(item => {
+          const matchesSearch = searchTerm === '' || 
+            item.data.toLowerCase().includes(searchTerm) ||
+            item.type.toLowerCase().includes(searchTerm);
+          const matchesFilter = filterType === 'all' || item.type === filterType;
+          
+          return matchesSearch && matchesFilter;
+        });
+        
+        this.renderFilteredHistory(filteredHistory);
+      }
+
+      renderFilteredHistory(filteredHistory) {
+        if (filteredHistory.length === 0) {
+          this.historyList.innerHTML = `
+            <div class="history-empty">
+              <i class="fas fa-search"></i>
+              <p>Không tìm thấy QR code nào</p>
+            </div>
+          `;
+          return;
+        }
+
+        this.historyList.innerHTML = filteredHistory.map(item => {
+          const date = new Date(item.timestamp).toLocaleDateString('vi-VN');
+          const title = this.getHistoryTitle(item);
+          const desc = this.getHistoryDescription(item);
+          
+          return `
+            <div class="history-item" data-id="${item.id}">
+              <div class="history-item-header">
+                <span class="history-item-type">${item.type.toUpperCase()}</span>
+                <span class="history-item-date">${date}</span>
+              </div>
+              <div class="history-item-preview">
+                <div class="history-item-qr">
+                  <img src="https://api.qrserver.com/v1/create-qr-code/?size=60x60&data=${encodeURIComponent(item.data)}" alt="QR Preview">
+                </div>
+                <div class="history-item-content">
+                  <div class="history-item-title">${title}</div>
+                  <div class="history-item-desc">${desc}</div>
+                </div>
+                <div class="history-item-actions">
+                  <button class="history-action-btn" onclick="qrGenerator.loadFromHistory('${item.id}')">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="history-action-btn" onclick="qrGenerator.downloadFromHistory('${item.id}')">
+                    <i class="fas fa-download"></i>
+                  </button>
+                  <button class="history-action-btn delete" onclick="qrGenerator.deleteFromHistory('${item.id}')">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      loadFromHistory(id) {
+        const item = this.history.find(h => h.id == id);
+        if (!item) return;
+
+        // Switch to the correct type
+        this.switchType(item.type);
+        
+        // Load the data
+        setTimeout(() => {
+          switch (item.type) {
+            case 'url':
+              document.getElementById('urlInput').value = item.data;
+              break;
+            case 'text':
+              document.getElementById('textInput').value = item.data;
+              break;
+            case 'wifi':
+              const ssidMatch = item.data.match(/S:([^;]+)/);
+              const passMatch = item.data.match(/P:([^;]+)/);
+              const secMatch = item.data.match(/T:([^;]+)/);
+              if (ssidMatch) document.getElementById('wifiSSID').value = ssidMatch[1];
+              if (passMatch) document.getElementById('wifiPassword').value = passMatch[1];
+              if (secMatch) document.getElementById('wifiSecurity').value = secMatch[1];
+              break;
+            case 'contact':
+              const nameMatch = item.data.match(/FN:([^\n]+)/);
+              const phoneMatch = item.data.match(/TEL:([^\n]+)/);
+              const emailMatch = item.data.match(/EMAIL:([^\n]+)/);
+              const addrMatch = item.data.match(/ADR:([^\n]+)/);
+              if (nameMatch) document.getElementById('contactName').value = nameMatch[1];
+              if (phoneMatch) document.getElementById('contactPhone').value = phoneMatch[1];
+              if (emailMatch) document.getElementById('contactEmail').value = emailMatch[1];
+              if (addrMatch) document.getElementById('contactAddress').value = addrMatch[1];
+              break;
+            case 'sms':
+              const smsPhoneMatch = item.data.match(/sms:([^:]+)/);
+              const smsMsgMatch = item.data.match(/sms:[^:]+:(.+)/);
+              if (smsPhoneMatch) document.getElementById('smsPhone').value = smsPhoneMatch[1];
+              if (smsMsgMatch) document.getElementById('smsMessage').value = smsMsgMatch[1];
+              break;
+            case 'email':
+              const emailToMatch = item.data.match(/mailto:([^?]+)/);
+              const subjectMatch = item.data.match(/subject=([^&]+)/);
+              const bodyMatch = item.data.match(/body=([^&]+)/);
+              if (emailToMatch) document.getElementById('emailTo').value = decodeURIComponent(emailToMatch[1]);
+              if (subjectMatch) document.getElementById('emailSubject').value = decodeURIComponent(subjectMatch[1]);
+              if (bodyMatch) document.getElementById('emailBody').value = decodeURIComponent(bodyMatch[1]);
+              break;
+          }
+          
+          // Load settings
+          this.sizeSlider.value = item.size;
+          this.sizeValue.textContent = item.size + 'px';
+          this.bgColor.value = item.bgColor;
+          this.fgColor.value = item.fgColor;
+          
+          // Generate QR code
+          this.generateQRCode();
+        }, 100);
+      }
+
+      downloadFromHistory(id) {
+        const item = this.history.find(h => h.id == id);
+        if (!item) return;
+
+        const link = document.createElement('a');
+        link.download = `qrcode-${item.type}-${id}.png`;
+        link.href = `https://api.qrserver.com/v1/create-qr-code/?size=${item.size}x${item.size}&data=${encodeURIComponent(item.data)}&bgcolor=${item.bgColor.replace('#', '')}&color=${item.fgColor.replace('#', '')}`;
+        link.click();
+        this.showNotification('Đã tải xuống QR Code!', 'success');
+      }
+
+      deleteFromHistory(id) {
+        if (confirm('Bạn có chắc muốn xóa QR code này?')) {
+          this.history = this.history.filter(h => h.id != id);
+          localStorage.setItem('qrHistory', JSON.stringify(this.history));
+          this.loadHistory();
+          this.showNotification('Đã xóa QR code!', 'success');
+        }
+      }
+
+      clearHistory() {
+        if (confirm('Bạn có chắc muốn xóa tất cả lịch sử?')) {
+          this.history = [];
+          localStorage.setItem('qrHistory', JSON.stringify(this.history));
+          this.loadHistory();
+          this.showNotification('Đã xóa tất cả lịch sử!', 'success');
+        }
+      }
+
+      // Logo Methods
+      handleLogoUpload(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        if (!file.type.startsWith('image/')) {
+          this.showNotification('Vui lòng chọn file hình ảnh!', 'error');
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.currentLogo = e.target.result;
+          this.logoPreviewImg.src = this.currentLogo;
+          this.logoPreview.style.display = 'block';
+          this.removeLogoBtn.classList.remove('hidden');
+          
+          if (this.qrCodeImg.src) {
+            this.addLogoOverlay();
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+
+      removeLogo() {
+        this.currentLogo = null;
+        this.logoPreview.style.display = 'none';
+        this.removeLogoBtn.classList.add('hidden');
+        this.logoUpload.value = '';
+        
+        // Remove logo overlay
+        const overlay = document.querySelector('.qr-logo-overlay');
+        if (overlay) {
+          overlay.remove();
+        }
+      }
+
+      addLogoOverlay() {
+        if (!this.currentLogo) return;
+
+        // Remove existing overlay
+        const existingOverlay = document.querySelector('.qr-logo-overlay');
+        if (existingOverlay) {
+          existingOverlay.remove();
+        }
+
+        // Create new overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'qr-logo-overlay';
+        
+        const logoImg = document.createElement('img');
+        logoImg.src = this.currentLogo;
+        logoImg.style.width = `${this.logoSizeSlider.value}%`;
+        logoImg.style.height = `${this.logoSizeSlider.value}%`;
+        
+        overlay.appendChild(logoImg);
+        
+        // Add to QR code container
+        const qrContainer = document.querySelector('.qr-code-container');
+        qrContainer.style.position = 'relative';
+        qrContainer.appendChild(overlay);
+      }
+
+      // Batch Generation Methods
+      handleCSVUpload(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.batchData.value = e.target.result;
+        };
+        reader.readAsText(file);
+      }
+
+      async generateBatch() {
+        const data = this.batchData.value.trim();
+        if (!data) {
+          this.showNotification('Vui lòng nhập dữ liệu hoặc chọn file CSV!', 'error');
+          return;
+        }
+
+        const lines = data.split('\n').filter(line => line.trim());
+        if (lines.length === 0) {
+          this.showNotification('Không có dữ liệu hợp lệ!', 'error');
+          return;
+        }
+
+        this.batchGenerateBtn.disabled = true;
+        this.batchGenerateBtn.innerHTML = '<div class="loading"></div> Đang tạo...';
+        this.batchProgress.classList.remove('hidden');
+        this.batchResults.classList.add('hidden');
+
+        this.batchResults = [];
+        const total = lines.length;
+        let completed = 0;
+
+        for (let i = 0; i < lines.length; i++) {
+          const line = lines[i].trim();
+          const parts = line.split(',');
+          
+          if (parts.length < 2) continue;
+
+          const type = parts[0].toLowerCase();
+          const qrData = this.parseBatchData(type, parts.slice(1));
+          
+          if (qrData) {
+            const qrItem = {
+              id: Date.now() + i,
+              type: type,
+              data: qrData,
+              title: this.getBatchTitle(type, parts.slice(1)),
+              url: `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}`
+            };
+            
+            this.batchResults.push(qrItem);
+          }
+
+          completed++;
+          const progress = (completed / total) * 100;
+          this.progressFill.style.width = `${progress}%`;
+          this.progressText.textContent = `${completed}/${total}`;
+
+          // Small delay to prevent blocking
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
+
+        this.renderBatchResults();
+        this.batchGenerateBtn.disabled = false;
+        this.batchGenerateBtn.innerHTML = '<i class="fas fa-magic"></i> Tạo hàng loạt';
+        this.batchResults.classList.remove('hidden');
+        
+        this.showNotification(`Đã tạo ${this.batchResults.length} QR code!`, 'success');
+      }
+
+      parseBatchData(type, parts) {
+        switch (type) {
+          case 'url':
+            return parts[0];
+          case 'text':
+            return parts[0];
+          case 'wifi':
+            const ssid = parts[0] || '';
+            const password = parts[1] || '';
+            const security = parts[2] || 'WPA';
+            return `WIFI:T:${security};S:${ssid};P:${password};H:false;;`;
+          case 'contact':
+            const name = parts[0] || '';
+            const phone = parts[1] || '';
+            const email = parts[2] || '';
+            const address = parts[3] || '';
+            let vcard = `BEGIN:VCARD\nVERSION:3.0\nFN:${name}`;
+            if (phone) vcard += `\nTEL:${phone}`;
+            if (email) vcard += `\nEMAIL:${email}`;
+            if (address) vcard += `\nADR:${address}`;
+            vcard += '\nEND:VCARD';
+            return vcard;
+          case 'sms':
+            const smsPhone = parts[0] || '';
+            const message = parts[1] || '';
+            return `sms:${smsPhone}${message ? `:${message}` : ''}`;
+          case 'email':
+            const to = parts[0] || '';
+            const subject = parts[1] || '';
+            const body = parts[2] || '';
+            return `mailto:${to}${subject ? `?subject=${encodeURIComponent(subject)}` : ''}${body ? `${subject ? '&' : '?'}body=${encodeURIComponent(body)}` : ''}`;
+          default:
+            return null;
+        }
+      }
+
+      getBatchTitle(type, parts) {
+        switch (type) {
+          case 'url':
+            return parts[0].length > 20 ? parts[0].substring(0, 20) + '...' : parts[0];
+          case 'text':
+            return parts[0].length > 20 ? parts[0].substring(0, 20) + '...' : parts[0];
+          case 'wifi':
+            return parts[0] || 'WiFi';
+          case 'contact':
+            return parts[0] || 'Contact';
+          case 'sms':
+            return parts[0] || 'SMS';
+          case 'email':
+            return parts[0] || 'Email';
+          default:
+            return 'QR Code';
+        }
+      }
+
+      renderBatchResults() {
+        this.batchList.innerHTML = this.batchResults.map(item => `
+          <div class="batch-item">
+            <div class="batch-item-qr">
+              <img src="${item.url}" alt="QR Code">
+            </div>
+            <div class="batch-item-title">${item.title}</div>
+            <div class="batch-item-type">${item.type.toUpperCase()}</div>
+          </div>
+        `).join('');
+      }
+
+      async downloadAllBatch() {
+        if (this.batchResults.length === 0) {
+          this.showNotification('Không có QR code nào để tải!', 'error');
+          return;
+        }
+
+        // Simple download - in a real app, you'd use JSZip
+        for (let i = 0; i < this.batchResults.length; i++) {
+          const item = this.batchResults[i];
+          const link = document.createElement('a');
+          link.download = `qrcode-${item.type}-${i + 1}.png`;
+          link.href = item.url;
+          link.click();
+          
+          // Small delay between downloads
+          await new Promise(resolve => setTimeout(resolve, 200));
+        }
+        
+        this.showNotification(`Đã tải xuống ${this.batchResults.length} QR code!`, 'success');
+      }
+
+      // Analytics Methods
+      setupAnalytics() {
+        this.refreshStatsBtn.addEventListener('click', () => {
+          this.updateAnalytics();
+        });
+        
+        this.exportStatsBtn.addEventListener('click', () => {
+          this.exportAnalytics();
+        });
+        
+        this.exportAdvancedBtn.addEventListener('click', () => {
+          this.exportAdvancedAnalytics();
+        });
+      }
+
+      // Advanced Analytics Methods
+      setupAdvancedAnalytics() {
+        this.analyticsTabs.forEach(tab => {
+          tab.addEventListener('click', () => {
+            this.switchAnalyticsTab(tab.dataset.tab);
+          });
+        });
+        
+        // Simulate real-time data updates
+        setInterval(() => {
+          this.updateRealtimeData();
+        }, 5000);
+      }
+
+      switchAnalyticsTab(tabName) {
+        // Remove active class from all tabs
+        this.analyticsTabs.forEach(tab => tab.classList.remove('active'));
+        
+        // Add active class to clicked tab
+        document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+        
+        // Hide all panels
+        this.realtimePanel.classList.add('hidden');
+        this.geographicPanel.classList.add('hidden');
+        this.devicePanel.classList.add('hidden');
+        
+        // Show selected panel
+        switch(tabName) {
+          case 'overview':
+            // Overview is always visible
+            break;
+          case 'realtime':
+            this.realtimePanel.classList.remove('hidden');
+            this.updateRealtimeChart();
+            break;
+          case 'geographic':
+            this.geographicPanel.classList.remove('hidden');
+            this.updateGeographicData();
+            break;
+          case 'devices':
+            this.devicePanel.classList.remove('hidden');
+            this.updateDeviceData();
+            break;
+        }
+      }
+
+      updateRealtimeData() {
+        // Simulate real-time data
+        const scansLastHour = Math.floor(Math.random() * 50) + 10;
+        const scansToday = Math.floor(Math.random() * 200) + 100;
+        const activeUsers = Math.floor(Math.random() * 20) + 5;
+        
+        this.scansLastHour.textContent = scansLastHour;
+        this.scansToday.textContent = scansToday;
+        this.activeUsers.textContent = activeUsers;
+      }
+
+      updateRealtimeChart() {
+        const ctx = this.realtimeChart.getContext('2d');
+        const data = Array.from({length: 24}, () => Math.floor(Math.random() * 50));
+        
+        ctx.clearRect(0, 0, this.realtimeChart.width, this.realtimeChart.height);
+        
+        const maxValue = Math.max(...data);
+        const barWidth = this.realtimeChart.width / data.length;
+        const maxHeight = this.realtimeChart.height - 20;
+        
+        data.forEach((value, index) => {
+          const barHeight = (value / maxValue) * maxHeight;
+          const x = index * barWidth;
+          const y = this.realtimeChart.height - barHeight;
+          
+          ctx.fillStyle = `hsl(${120 + (value / maxValue) * 60}, 70%, 50%)`;
+          ctx.fillRect(x, y, barWidth - 1, barHeight);
+        });
+      }
+
+      updateGeographicData() {
+        // Simulate geographic data
+        const locations = [
+          {name: 'Hà Nội', count: Math.floor(Math.random() * 100) + 20},
+          {name: 'TP.HCM', count: Math.floor(Math.random() * 80) + 15},
+          {name: 'Đà Nẵng', count: Math.floor(Math.random() * 40) + 10},
+          {name: 'Cần Thơ', count: Math.floor(Math.random() * 30) + 5}
+        ];
+        
+        const locationList = document.getElementById('locationList');
+        locationList.innerHTML = locations.map(loc => `
+          <div class="location-item">
+            <span class="location-name">${loc.name}</span>
+            <span class="location-count">${loc.count} lần</span>
+          </div>
+        `).join('');
+      }
+
+      updateDeviceData() {
+        // Device data is already in HTML, just animate the bars
+        const deviceFills = document.querySelectorAll('.device-fill');
+        deviceFills.forEach(fill => {
+          const width = fill.style.width;
+          fill.style.width = '0%';
+          setTimeout(() => {
+            fill.style.width = width;
+          }, 100);
+        });
+      }
+
+      exportAdvancedAnalytics() {
+        const advancedReport = {
+          generatedAt: new Date().toISOString(),
+          overview: this.calculateStats(),
+          realtime: {
+            scansLastHour: parseInt(this.scansLastHour.textContent),
+            scansToday: parseInt(this.scansToday.textContent),
+            activeUsers: parseInt(this.activeUsers.textContent)
+          },
+          geographic: this.getGeographicData(),
+          devices: this.getDeviceData(),
+          history: this.history
+        };
+
+        const blob = new Blob([JSON.stringify(advancedReport, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `advanced-analytics-${new Date().toISOString().split('T')[0]}.json`;
+        link.click();
+        URL.revokeObjectURL(url);
+        
+        this.showNotification('Đã xuất báo cáo nâng cao!', 'success');
+      }
+
+      getGeographicData() {
+        const locationItems = document.querySelectorAll('.location-item');
+        return Array.from(locationItems).map(item => ({
+          name: item.querySelector('.location-name').textContent,
+          count: parseInt(item.querySelector('.location-count').textContent)
+        }));
+      }
+
+      getDeviceData() {
+        return {
+          os: [
+            {name: 'Android', percent: 60},
+            {name: 'iOS', percent: 30},
+            {name: 'Windows', percent: 10}
+          ],
+          browsers: [
+            {name: 'Chrome', percent: 70},
+            {name: 'Safari', percent: 20},
+            {name: 'Firefox', percent: 10}
+          ]
+        };
+      }
+
+      // Dynamic QR Methods
+      setupDynamicQR() {
+        this.generateDynamicBtn.addEventListener('click', () => {
+          this.createDynamicQR();
+        });
+        
+        this.createDynamicBtn.addEventListener('click', () => {
+          this.showDynamicQRForm();
+        });
+        
+        this.loadDynamicQRCodes();
+      }
+
+      createDynamicQR() {
+        const name = this.dynamicQrName.value.trim();
+        const url = this.dynamicQrUrl.value.trim();
+        const expiry = parseInt(this.dynamicQrExpiry.value) || 30;
+        const limit = parseInt(this.dynamicQrLimit.value) || 1000;
+        const password = this.dynamicQrPassword.value.trim();
+        
+        if (!name || !url) {
+          this.showNotification('Vui lòng nhập tên và URL!', 'error');
+          return;
+        }
+        
+        const dynamicQR = {
+          id: Date.now().toString(),
+          name,
+          url,
+          expiry: new Date(Date.now() + expiry * 24 * 60 * 60 * 1000),
+          limit,
+          password,
+          scans: 0,
+          createdAt: new Date(),
+          status: 'active'
+        };
+        
+        this.dynamicQrCodes.push(dynamicQR);
+        localStorage.setItem('dynamicQrCodes', JSON.stringify(this.dynamicQrCodes));
+        
+        this.renderDynamicQRCodes();
+        this.clearDynamicQRForm();
+        
+        this.showNotification(`Đã tạo QR Code động: ${name}`, 'success');
+      }
+
+      showDynamicQRForm() {
+        const controls = document.querySelector('.dynamic-qr-controls');
+        controls.scrollIntoView({ behavior: 'smooth' });
+        this.dynamicQrName.focus();
+      }
+
+      clearDynamicQRForm() {
+        this.dynamicQrName.value = '';
+        this.dynamicQrUrl.value = '';
+        this.dynamicQrExpiry.value = '30';
+        this.dynamicQrLimit.value = '1000';
+        this.dynamicQrPassword.value = '';
+      }
+
+      loadDynamicQRCodes() {
+        this.renderDynamicQRCodes();
+      }
+
+      renderDynamicQRCodes() {
+        this.dynamicQrList.innerHTML = this.dynamicQrCodes.map(qr => {
+          const daysLeft = Math.ceil((qr.expiry - new Date()) / (1000 * 60 * 60 * 24));
+          const status = daysLeft > 0 && qr.scans < qr.limit ? 'Hoạt động' : 'Hết hạn';
+          const statusClass = status === 'Hoạt động' ? 'active' : 'expired';
+          
+          return `
+            <div class="dynamic-qr-item">
+              <div class="dynamic-qr-info">
+                <h4>${qr.name}</h4>
+                <p>${qr.url}</p>
+                <div class="dynamic-qr-meta">
+                  <span class="meta-item">Còn lại: ${daysLeft} ngày</span>
+                  <span class="meta-item">Đã quét: ${qr.scans}/${qr.limit}</span>
+                  <span class="meta-item status-${statusClass}">Trạng thái: ${status}</span>
+                </div>
+              </div>
+              <div class="dynamic-qr-actions">
+                <button class="action-btn edit" onclick="qrGenerator.editDynamicQR('${qr.id}')" title="Chỉnh sửa">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="action-btn stats" onclick="qrGenerator.viewDynamicStats('${qr.id}')" title="Thống kê">
+                  <i class="fas fa-chart-line"></i>
+                </button>
+                <button class="action-btn copy" onclick="qrGenerator.copyDynamicQR('${qr.id}')" title="Sao chép">
+                  <i class="fas fa-copy"></i>
+                </button>
+                <button class="action-btn delete" onclick="qrGenerator.deleteDynamicQR('${qr.id}')" title="Xóa">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      editDynamicQR(id) {
+        const qr = this.dynamicQrCodes.find(q => q.id === id);
+        if (!qr) return;
+        
+        this.dynamicQrName.value = qr.name;
+        this.dynamicQrUrl.value = qr.url;
+        this.dynamicQrExpiry.value = Math.ceil((qr.expiry - new Date()) / (1000 * 60 * 60 * 24));
+        this.dynamicQrLimit.value = qr.limit;
+        this.dynamicQrPassword.value = qr.password;
+        
+        this.showDynamicQRForm();
+        this.showNotification('Đã tải thông tin QR Code để chỉnh sửa', 'info');
+      }
+
+      viewDynamicStats(id) {
+        const qr = this.dynamicQrCodes.find(q => q.id === id);
+        if (!qr) return;
+        
+        this.showNotification(`Thống kê QR: ${qr.name} - ${qr.scans} lần quét`, 'info');
+      }
+
+      copyDynamicQR(id) {
+        const qr = this.dynamicQrCodes.find(q => q.id === id);
+        if (!qr) return;
+        
+        navigator.clipboard.writeText(qr.url).then(() => {
+          this.showNotification('Đã sao chép URL!', 'success');
+        });
+      }
+
+      deleteDynamicQR(id) {
+        if (confirm('Bạn có chắc muốn xóa QR Code này?')) {
+          this.dynamicQrCodes = this.dynamicQrCodes.filter(q => q.id !== id);
+          localStorage.setItem('dynamicQrCodes', JSON.stringify(this.dynamicQrCodes));
+          this.renderDynamicQRCodes();
+          this.showNotification('Đã xóa QR Code!', 'success');
+        }
+      }
+
+      updateAnalytics() {
+        const stats = this.calculateStats();
+        
+        // Update stat cards with animation
+        this.animateNumber(this.totalQRCodes, stats.total);
+        this.animateNumber(this.urlCount, stats.url);
+        this.animateNumber(this.wifiCount, stats.wifi);
+        this.animateNumber(this.contactCount, stats.contact);
+        
+        this.drawChart(stats);
+        
+        // Show empty state if no data
+        if (stats.total === 0) {
+          this.showEmptyAnalytics();
+        } else {
+          this.hideEmptyAnalytics();
+        }
+      }
+
+      animateNumber(element, targetValue) {
+        const startValue = parseInt(element.textContent) || 0;
+        const duration = 500;
+        const startTime = performance.now();
+        
+        const animate = (currentTime) => {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const currentValue = Math.round(startValue + (targetValue - startValue) * progress);
+          
+          element.textContent = currentValue;
+          
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          }
+        };
+        
+        requestAnimationFrame(animate);
+      }
+
+      showEmptyAnalytics() {
+        const chartContainer = document.querySelector('.chart-container');
+        if (!chartContainer.querySelector('.empty-chart')) {
+          const emptyDiv = document.createElement('div');
+          emptyDiv.className = 'empty-chart';
+          emptyDiv.innerHTML = `
+            <i class="fas fa-chart-bar" style="font-size: 3rem; color: #64748b; margin-bottom: 1rem;"></i>
+            <p style="color: #94a3b8; font-size: 1rem;">Chưa có dữ liệu để hiển thị</p>
+            <p style="color: #64748b; font-size: 0.9rem;">Tạo QR code đầu tiên để xem thống kê</p>
+          `;
+          chartContainer.appendChild(emptyDiv);
+        }
+      }
+
+      hideEmptyAnalytics() {
+        const emptyChart = document.querySelector('.empty-chart');
+        if (emptyChart) {
+          emptyChart.remove();
+        }
+      }
+
+      calculateStats() {
+        const stats = {
+          total: this.history.length,
+          url: 0,
+          text: 0,
+          wifi: 0,
+          contact: 0,
+          sms: 0,
+          email: 0
+        };
+
+        this.history.forEach(item => {
+          stats[item.type] = (stats[item.type] || 0) + 1;
+        });
+
+        return stats;
+      }
+
+      drawChart(stats) {
+        const ctx = this.qrChart.getContext('2d');
+        const data = [stats.url, stats.text, stats.wifi, stats.contact, stats.sms, stats.email];
+        const labels = ['URL', 'Text', 'WiFi', 'Contact', 'SMS', 'Email'];
+        const colors = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
+
+        // Clear canvas
+        ctx.clearRect(0, 0, this.qrChart.width, this.qrChart.height);
+        
+        // Handle empty data
+        const maxValue = Math.max(...data, 1);
+        const barWidth = this.qrChart.width / data.length;
+        const maxHeight = this.qrChart.height - 60;
+        const padding = 20;
+
+        // Draw bars
+        data.forEach((value, index) => {
+          const barHeight = maxValue > 0 ? (value / maxValue) * maxHeight : 0;
+          const x = index * barWidth + padding;
+          const y = this.qrChart.height - barHeight - padding - 20;
+          const barWidthActual = barWidth - padding * 2;
+
+          // Bar background
+          ctx.fillStyle = colors[index] + '20';
+          ctx.fillRect(x, this.qrChart.height - padding - 20, barWidthActual, maxHeight);
+          
+          // Bar fill
+          ctx.fillStyle = colors[index];
+          ctx.fillRect(x, y, barWidthActual, barHeight);
+
+          // Bar border
+          ctx.strokeStyle = colors[index];
+          ctx.lineWidth = 1;
+          ctx.strokeRect(x, y, barWidthActual, barHeight);
+
+          // Value labels
+          ctx.fillStyle = '#cbd5e1';
+          ctx.font = 'bold 12px Inter';
+          ctx.textAlign = 'center';
+          ctx.fillText(value.toString(), x + barWidthActual / 2, y - 8);
+        });
+
+        // Draw category labels
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '11px Inter';
+        ctx.textAlign = 'center';
+        data.forEach((value, index) => {
+          const x = index * barWidth + padding;
+          const barWidthActual = barWidth - padding * 2;
+          ctx.fillText(labels[index], x + barWidthActual / 2, this.qrChart.height - 5);
+        });
+
+        // Draw title
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = 'bold 14px Inter';
+        ctx.textAlign = 'center';
+        ctx.fillText('QR Code Types Distribution', this.qrChart.width / 2, 20);
+      }
+
+      exportAnalytics() {
+        const stats = this.calculateStats();
+        const report = {
+          generatedAt: new Date().toISOString(),
+          totalQRCodes: stats.total,
+          breakdown: stats,
+          history: this.history.map(item => ({
+            type: item.type,
+            timestamp: item.timestamp,
+            title: this.getHistoryTitle(item)
+          }))
+        };
+
+        const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `qr-analytics-${new Date().toISOString().split('T')[0]}.json`;
+        link.click();
+        URL.revokeObjectURL(url);
+        
+        this.showNotification('Đã xuất báo cáo thống kê!', 'success');
+      }
+
+      // Template Methods
+      setupTemplates() {
+        this.addTemplateBtn.addEventListener('click', () => {
+          this.showAddTemplateModal();
+        });
+        
+        this.loadTemplates();
+      }
+
+      loadTemplates() {
+        // Load default templates
+        const defaultTemplates = [
+          {
+            id: 'business-card',
+            name: 'Business Card',
+            icon: 'fas fa-id-card',
+            type: 'contact',
+            fields: ['name', 'phone', 'email', 'company', 'title']
+          },
+          {
+            id: 'restaurant-menu',
+            name: 'Restaurant Menu',
+            icon: 'fas fa-utensils',
+            type: 'url',
+            fields: ['menuUrl']
+          },
+          {
+            id: 'event-info',
+            name: 'Event Info',
+            icon: 'fas fa-calendar',
+            type: 'url',
+            fields: ['eventUrl', 'eventName']
+          }
+        ];
+
+        this.templates = [...defaultTemplates, ...this.templates];
+        // Don't render templates since they're already in HTML
+        // this.renderTemplates();
+      }
+
+      renderTemplates() {
+        this.templateGrid.innerHTML = this.templates.map(template => `
+          <div class="template-item" data-template="${template.id}">
+            <div class="template-preview">
+              <i class="${template.icon}"></i>
+            </div>
+            <div class="template-name">${template.name}</div>
+            <div class="template-actions">
+              <button class="template-use-btn" onclick="qrGenerator.useTemplate('${template.id}')">
+                <i class="fas fa-play"></i>
+              </button>
+              <button class="template-edit-btn" onclick="qrGenerator.editTemplate('${template.id}')">
+                <i class="fas fa-edit"></i>
+              </button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      useTemplate(templateId) {
+        const template = this.templates.find(t => t.id === templateId);
+        if (!template) {
+          this.showNotification('Template không tồn tại!', 'error');
+          return;
+        }
+
+        this.switchType(template.type);
+        
+        // Fill template data
+        setTimeout(() => {
+          switch (template.id) {
+            case 'business-card':
+              document.getElementById('contactName').value = 'Nguyễn Văn A';
+              document.getElementById('contactPhone').value = '0123456789';
+              document.getElementById('contactEmail').value = 'nguyenvana@company.com';
+              document.getElementById('contactAddress').value = '123 Đường ABC, Quận 1, TP.HCM';
+              break;
+            case 'restaurant-menu':
+              document.getElementById('urlInput').value = 'https://restaurant.com/menu';
+              break;
+            case 'event-info':
+              document.getElementById('urlInput').value = 'https://event.com/info';
+              break;
+            default:
+              // Handle custom templates
+              if (template.fields) {
+                template.fields.forEach(field => {
+                  const element = document.getElementById(field);
+                  if (element) {
+                    element.value = template.data[field] || '';
+                  }
+                });
+              }
+              break;
+          }
+          
+          this.showNotification(`Đã áp dụng template: ${template.name}`, 'success');
+        }, 100);
+      }
+
+      editTemplate(templateId) {
+        this.showNotification('Chức năng chỉnh sửa template sẽ có trong phiên bản sau!', 'info');
+      }
+
+      showAddTemplateModal() {
+        this.showNotification('Chức năng thêm template sẽ có trong phiên bản sau!', 'info');
+      }
+
+      // Settings Methods
+      setupSettings() {
+        this.exportSettingsBtn.addEventListener('click', () => {
+          this.exportSettings();
+        });
+        
+        this.importSettingsBtn.addEventListener('click', () => {
+          this.settingsFileInput.click();
+        });
+        
+        this.settingsFileInput.addEventListener('change', (e) => {
+          this.importSettings(e);
+        });
+      }
+
+      exportSettings() {
+        const settings = {
+          theme: localStorage.getItem('theme') || 'dark',
+          history: this.history,
+          templates: this.templates,
+          preferences: {
+            defaultSize: this.sizeSlider.value,
+            defaultBgColor: this.bgColor.value,
+            defaultFgColor: this.fgColor.value,
+            defaultCornerStyle: this.cornerStyle.value,
+            defaultColorEffect: this.colorEffect.value
+          }
+        };
+
+        const blob = new Blob([JSON.stringify(settings, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `qr-settings-${new Date().toISOString().split('T')[0]}.json`;
+        link.click();
+        URL.revokeObjectURL(url);
+        
+        this.showNotification('Đã xuất cài đặt!', 'success');
+      }
+
+      importSettings(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const settings = JSON.parse(e.target.result);
+            
+            // Import theme
+            if (settings.theme) {
+              localStorage.setItem('theme', settings.theme);
+              document.documentElement.setAttribute('data-theme', settings.theme);
+            }
+            
+            // Import history
+            if (settings.history) {
+              this.history = settings.history;
+              localStorage.setItem('qrHistory', JSON.stringify(this.history));
+              this.loadHistory();
+            }
+            
+            // Import templates
+            if (settings.templates) {
+              this.templates = settings.templates;
+              localStorage.setItem('qrTemplates', JSON.stringify(this.templates));
+              this.renderTemplates();
+            }
+            
+            // Import preferences
+            if (settings.preferences) {
+              const prefs = settings.preferences;
+              if (prefs.defaultSize) this.sizeSlider.value = prefs.defaultSize;
+              if (prefs.defaultBgColor) this.bgColor.value = prefs.defaultBgColor;
+              if (prefs.defaultFgColor) this.fgColor.value = prefs.defaultFgColor;
+              if (prefs.defaultCornerStyle) this.cornerStyle.value = prefs.defaultCornerStyle;
+              if (prefs.defaultColorEffect) this.colorEffect.value = prefs.defaultColorEffect;
+            }
+            
+            this.updateAnalytics();
+            this.showNotification('Đã nhập cài đặt thành công!', 'success');
+          } catch (error) {
+            this.showNotification('Lỗi khi nhập cài đặt!', 'error');
+          }
+        };
+        reader.readAsText(file);
+      }
+    }
+
+    // Initialize the application
+    let qrGenerator;
+    document.addEventListener('DOMContentLoaded', () => {
+      qrGenerator = new QRCodeGenerator();
+    });
+
+    // Add light theme styles
+    const lightThemeStyles = `
+      [data-theme="light"] {
+        --dark-bg: #f8fafc;
+        --dark-surface: #ffffff;
+        --dark-surface-2: #f1f5f9;
+        --text-primary: #1e293b;
+        --text-secondary: #475569;
+        --text-muted: #64748b;
+        --border-color: #e2e8f0;
+      }
+      
+      [data-theme="light"] body {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      }
+      
+      [data-theme="light"] .navbar {
+        background: rgba(248, 250, 252, 0.95);
+        border-bottom-color: #e2e8f0;
+      }
+      
+      [data-theme="light"] .qr-code-container {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+      }
+    `;
+
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = lightThemeStyles;
+    document.head.appendChild(styleSheet);
+  </script>
+</body>
+</html>
